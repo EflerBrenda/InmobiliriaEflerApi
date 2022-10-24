@@ -38,7 +38,7 @@ namespace InmobiliariaEfler.Api
             try
             {
                 var usuario = User.Identity.Name;
-                return Ok(contexto.Contrato.Include(i => i.Inmueble).Where(c => c.Inmueble.Propietario.Email == usuario && c.Fecha_Desde <= DateTime.Today.Date && c.Fecha_Hasta >= DateTime.Today.Date).ToList());
+                return Ok(contexto.Contrato.Include(i => i.Inmueble).Include(inq => inq.Inquilino).Where(c => c.Inmueble.Propietario.Email == usuario && c.Fecha_Desde <= DateTime.Today.Date && c.Fecha_Hasta >= DateTime.Today.Date).ToList());
 
             }
             catch (Exception ex)

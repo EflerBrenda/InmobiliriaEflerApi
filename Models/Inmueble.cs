@@ -8,7 +8,7 @@ public class Inmueble
     [Display(Name = "Dirección")]
     public String Direccion { get; set; }
     public int Ambientes { get; set; }
-    public Double Superficie { get; set; }
+    //public Double? Superficie { get; set; }
     public Double Latitud { get; set; }
     public Double Longitud { get; set; }
     public Double Precio { get; set; }

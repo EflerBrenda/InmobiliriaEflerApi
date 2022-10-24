@@ -32,14 +32,24 @@ namespace InmobiliariaEfler.Api
             this.config = config;
         }
         // GET: api/<controller>
-        [HttpGet]
-        public async Task<ActionResult<Inquilino>> Get([FromBody] Contrato c)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Contrato>> Get(int id)
         {
             try
             {
+                var usuario = User.Identity.Name;
+                return Ok(await contexto.Contrato.Include(inq => inq.Inquilino).Include(i => i.Inmueble).SingleOrDefaultAsync(x => x.InmuebleId == id && x.Inmueble.Propietario.Email == usuario && x.Fecha_Desde <= DateTime.Today.Date && x.Fecha_Hasta >= DateTime.Today.Date));
+                /* var usuario = User.Identity.Name;
+                 return Ok(contexto.Contrato.Include(i => i.Inmueble).Where(c => c.Inmueble.Propietario.Email == usuario && c.Fecha_Desde <= DateTime.Today.Date && c.Fecha_Hasta >= DateTime.Today.Date && c.InmuebleId == id).Select(x => new Inquilino
+                 {
+                     Id = x.Inquilino.Id,
+                     Nombre = x.Inquilino.Nombre,
+                     Apellido = x.Inquilino.Apellido,
+                     DNI = x.Inquilino.DNI,
+                     Telefono = x.Inquilino.Telefono,
+                     Email = x.Inquilino.Email
 
-                return Ok(await contexto.Inquilino.SingleOrDefaultAsync(x => x.Id == c.InquilinoId));
-
+                 }));*/
             }
             catch (Exception ex)
             {

@@ -14,7 +14,7 @@ public class Contrato
     public DateTime Fecha_Hasta { get; set; }
 
     [Display(Name = "Monto del alquiler")]
-    public decimal Monto_Alquiler { get; set; }
+    public Double Monto_Alquiler { get; set; }
 
     [Display(Name = "Inmueble")]
     public int InmuebleId { get; set; }

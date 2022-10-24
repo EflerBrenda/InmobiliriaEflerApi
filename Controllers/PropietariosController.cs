@@ -95,7 +95,7 @@ namespace InmobiliariaEfler.Api
         }
         // PUT api/<controller>
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] Propietario propietario)
+        public async Task<IActionResult> Put([FromForm] Propietario propietario)
         {
             try
             {

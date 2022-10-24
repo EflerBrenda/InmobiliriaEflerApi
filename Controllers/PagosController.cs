@@ -32,12 +32,12 @@ namespace InmobiliariaEfler.Api
             this.config = config;
         }
         // GET: api/<controller>
-        [HttpGet]
-        public async Task<ActionResult<Pago>> Get([FromBody] Contrato contrato)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Pago>> Get(int id)
         {
             try
             {
-                return Ok(await contexto.Pago.Where(x => x.ContratoId == contrato.Id).ToListAsync());
+                return Ok(await contexto.Pago.Where(x => x.ContratoId == id).ToListAsync());
             }
             catch (Exception ex)
             {

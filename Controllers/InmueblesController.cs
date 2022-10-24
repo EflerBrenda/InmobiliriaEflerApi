@@ -48,7 +48,7 @@ namespace InmobiliariaEfler.Api
         }
         // POST api/<controller>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Inmueble inmueble)
+        public async Task<IActionResult> Post([FromForm] Inmueble inmueble)
         {
             try
             {
@@ -88,32 +88,7 @@ namespace InmobiliariaEfler.Api
 
 
         }
-        [HttpGet("InmueblesVigentes")]
-        public async Task<ActionResult<Inmueble>> InmueblesVigentes()
-        {
-            try
-            {
-                var usuario = User.Identity.Name;
-                return Ok(contexto.Contrato.Include(i => i.Inmueble).Where(c => c.Inmueble.Propietario.Email == usuario && c.Fecha_Desde <= DateTime.Today.Date && c.Fecha_Hasta >= DateTime.Today.Date).ToList().Select(x => new Inmueble
-                {
-                    Id = x.Inmueble.Id,
-                    Direccion = x.Inmueble.Direccion,
-                    Ambientes = x.Inmueble.Ambientes,
-                    Latitud = x.Inmueble.Latitud,
-                    Longitud = x.Inmueble.Longitud,
-                    Precio = x.Inmueble.Precio,
-                    Uso = x.Inmueble.Uso,
-                    Oferta_activa = x.Inmueble.Oferta_activa,
-                    PropietarioId = x.Inmueble.PropietarioId,
-                    TipoInmuebleId = x.Inmueble.TipoInmuebleId
-                }));
 
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
         // GET: api/<controller>
         [HttpGet("ObtenerTipoInmueble")]
         public async Task<IActionResult> ObtenerTipoInmueble()
