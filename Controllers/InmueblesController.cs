@@ -25,11 +25,13 @@ namespace InmobiliariaEfler.Api
     {
         private readonly DataContext contexto;
         private readonly IConfiguration config;
+        private readonly IWebHostEnvironment environment;
 
-        public InmueblesController(DataContext contexto, IConfiguration config)
+        public InmueblesController(DataContext contexto, IConfiguration config, IWebHostEnvironment environment)
         {
             this.contexto = contexto;
             this.config = config;
+            this.environment = environment;
         }
 
         // GET: api/<controller>
@@ -52,13 +54,32 @@ namespace InmobiliariaEfler.Api
         {
             try
             {
-                if (ModelState.IsValid)
+
+                if (inmueble.Imagen != null)
                 {
-                    await contexto.Inmueble.AddAsync(inmueble);
-                    contexto.SaveChanges();
-                    return CreatedAtAction(nameof(Get), new { id = inmueble.Id }, inmueble);
+
+                    MemoryStream stream1 = new MemoryStream(Convert.FromBase64String(inmueble.Imagen));
+                    IFormFile inmuebleFoto = new FormFile(stream1, 0, stream1.Length, "inmueble", ".jpg");
+                    string wwwPath = environment.WebRootPath;
+                    string path = Path.Combine(wwwPath, "Uploads");
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+                    Random r = new Random();
+                    string fileName = "inmueble_" + inmueble.PropietarioId + r.Next(0, 100000) + Path.GetExtension(inmuebleFoto.FileName);
+                    string pathCompleto = Path.Combine(path, fileName);
+
+                    inmueble.Imagen = Path.Combine("http://192.168.0.104:5000/", "Uploads/", fileName);
+                    using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
+                    {
+                        inmuebleFoto.CopyTo(stream);
+                    }
+
                 }
-                return BadRequest();
+                await contexto.Inmueble.AddAsync(inmueble);
+                contexto.SaveChanges();
+                return CreatedAtAction(nameof(Get), new { id = inmueble.Id }, inmueble);
             }
             catch (Exception ex)
             {

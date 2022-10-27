@@ -41,3 +41,4 @@ C:\Users\Brenda\Net\InmobiliariaApi\bin\Debug\net6.0\System.IdentityModel.Tokens
 C:\Users\Brenda\Net\InmobiliariaApi\bin\Debug\net6.0\MailKit.dll
 C:\Users\Brenda\Net\InmobiliariaApi\bin\Debug\net6.0\MimeKit.dll
 C:\Users\Brenda\Net\InmobiliariaApi\bin\Debug\net6.0\BouncyCastle.Crypto.dll
+C:\Users\Brenda\Net\InmobiliariaApi\bin\Debug\net6.0\InmobiliariaApi.staticwebassets.runtime.json

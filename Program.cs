@@ -5,6 +5,8 @@ using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using InmobiliariaEfler.Models;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -30,7 +32,27 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                         IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(
                             configuration["TokenAuthentication:SecretKey"])),
                     };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            // Read the token out of the query string
+                            var accessToken = context.Request.Query["access_token"];
+                            // If the request is for our hub...
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                path.StartsWithSegments("/API/Propietarios/token"))
+                            {//reemplazar la url por la usada en la ruta 
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
+
+
+
+
 
 
 builder.Services.AddAuthorization(options =>

@@ -14,4 +14,5 @@ public class Propietario
 
     [Required, DataType(DataType.Password)]
     public string Password { get; set; }
+    public string Avatar { get; set; }
 }

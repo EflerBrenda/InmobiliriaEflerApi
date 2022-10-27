@@ -18,6 +18,8 @@ public class Inmueble
     [Display(Name = "Oferta activa")]
     public Boolean Oferta_activa { get; set; }
 
+    public String? Imagen { get; set; }
+
     public int PropietarioId { get; set; }
     public int TipoInmuebleId { get; set; }
 
