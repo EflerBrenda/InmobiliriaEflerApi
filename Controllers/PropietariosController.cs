@@ -16,8 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using MailKit;
 using MimeKit;
 using MailKit.Net.Smtp;
-
-
+using Microsoft.AspNetCore.Http.Features;
 
 namespace InmobiliariaEfler.Api
 {
@@ -161,6 +160,7 @@ namespace InmobiliariaEfler.Api
         {
             try
             {
+
                 var perfil = new
                 {
                     Email = User.Identity.Name,
@@ -193,8 +193,8 @@ namespace InmobiliariaEfler.Api
 
                 var message = new MimeKit.MimeMessage();
                 message.To.Add(new MailboxAddress(perfil.Nombre, "eflerbrenda@gmail.com"));
-                message.From.Add(new MailboxAddress(perfil.Nombre, "eflerbrenda@gmail.com"));
-                message.Subject = "Testing";
+                message.From.Add(new MailboxAddress("Inmobiliria Efler", "eflerbrenda@gmail.com"));
+                message.Subject = "Inmobiliria Efler App";
                 message.Body = new TextPart("html")
                 {
                     Text = @$"<h1>Hola {perfil.Nombre}!</h1>
@@ -210,11 +210,12 @@ namespace InmobiliariaEfler.Api
                 System.Net.Security.SslPolicyErrors sslPolicyErrors) =>
                 { return true; };
                 client.Connect("smtp.gmail.com", 465, MailKit.Security.SecureSocketOptions.Auto);
-                //			client.Authenticate(config["SMTPUser"], config["SMTPPass"]);
-                client.Authenticate("ulp.api.net@gmail.com", "ktitieuikmuzcuup");
+                client.Authenticate(config["SMTPUser"], config["SMTPPass"]);
+                //client.Authenticate("ulp.api.net@gmail.com", "ktitieuikmuzcuup");
 
                 await client.SendAsync(message);
-                return Ok(perfil);
+
+                return Ok("Listo! ya se envio la nueva contraseña a su e-mail.");
 
             }
             catch (Exception ex)
@@ -225,16 +226,18 @@ namespace InmobiliariaEfler.Api
 
 
         // GET api/<controller>/5
-        [HttpPost("emailPedido")]
+        [HttpPost("PedidoEmail")]
         [AllowAnonymous]
         public async Task<IActionResult> GetByEmail([FromForm] string email)
         {
             try
-            {   //método sin autenticar, busca el propietario xemail
+            {
+                var feature = HttpContext.Features.Get<IHttpConnectionFeature>();
+                var LocalPort = feature?.LocalPort.ToString();
+                var ipv4 = HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString();
+                var ipConexion = "http://" + ipv4 + ":" + LocalPort + "/";
+
                 var entidad = await contexto.Propietario.FirstOrDefaultAsync(x => x.Email == email);
-                //var entidad = new PropietarioView(entidad1);
-                //para hacer: si el propietario existe, mandarle un email con un enlace con el token
-                //ese enlace servirá para resetear la contraseña
                 var key = new SymmetricSecurityKey(
                         System.Text.Encoding.ASCII.GetBytes(config["TokenAuthentication:SecretKey"]));
                 var credenciales = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -244,9 +247,8 @@ namespace InmobiliariaEfler.Api
                         new Claim("FullName", entidad.Nombre + " " + entidad.Apellido),
                         new Claim("id", entidad.Id + " " ),
                         new Claim(ClaimTypes.Role, "Propietario"),
-					//	new Claim(ClaimTypes.Name, p.Id.ToString()),
 
-					};
+                    };
 
                 var token = new JwtSecurityToken(
                     issuer: config["TokenAuthentication:Issuer"],
@@ -257,25 +259,22 @@ namespace InmobiliariaEfler.Api
                 );
                 var to = new JwtSecurityTokenHandler().WriteToken(token);
 
-                var direccion = "http://192.168.0.104:5000/API/Propietarios/token?access_token=" + to;
+                var direccion = ipConexion + "API/Propietarios/token?access_token=" + to;
                 try
                 {
 
 
                     var message = new MimeKit.MimeMessage();
                     message.To.Add(new MailboxAddress(entidad.Nombre, "eflerbrenda@gmail.com"));
-                    message.From.Add(new MailboxAddress(entidad.Nombre, "eflerbrenda@gmail.com"));
-                    message.Subject = "Testing";
+                    message.From.Add(new MailboxAddress("Inmobiliria Efler", "eflerbrenda@gmail.com"));
+                    message.Subject = "Inmobiliria Efler App";
                     message.Body = new TextPart("html")
 
 
                     {
-                        Text = @$"<h1>Hola</h1>
-					<p>Bienvenido, {entidad.Nombre}! <a href={direccion} >Presione aquí para reestablecer su contraseña.</a> </p>",
+                        Text = @$"<h1>Hola {entidad.Nombre}!</h1>
+					<p>Si usted solicito el cambio de contraseña,<a href={direccion} >presione aquí para reestablecerla.</a> </p><br><p> Si no lo hizo, desestime este e-mail.</p>",
                     };
-
-
-
 
                     message.Headers.Add("Encabezado", "Valor");
                     MailKit.Net.Smtp.SmtpClient client = new MailKit.Net.Smtp.SmtpClient();
@@ -285,11 +284,10 @@ namespace InmobiliariaEfler.Api
                     System.Net.Security.SslPolicyErrors sslPolicyErrors) =>
                     { return true; };
                     client.Connect("smtp.gmail.com", 465, MailKit.Security.SecureSocketOptions.Auto);
-                    //			client.Authenticate(config["SMTPUser"], config["SMTPPass"]);
-                    client.Authenticate("ulp.api.net@gmail.com", "ktitieuikmuzcuup");
+                    client.Authenticate(config["SMTPUser"], config["SMTPPass"]);
 
                     await client.SendAsync(message);
-                    //	return Ok(perfil);
+
 
                 }
                 catch (Exception ex)
@@ -297,6 +295,7 @@ namespace InmobiliariaEfler.Api
                     return BadRequest(ex.Message);
                 }
                 return entidad != null ? Ok(entidad) : NotFound();
+
             }
             catch (Exception ex)
             {

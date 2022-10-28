@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -57,6 +58,10 @@ namespace InmobiliariaEfler.Api
 
                 if (inmueble.Imagen != null)
                 {
+                    var feature = HttpContext.Features.Get<IHttpConnectionFeature>();
+                    var LocalPort = feature?.LocalPort.ToString();
+                    var ipv4 = HttpContext.Connection.LocalIpAddress.MapToIPv4().ToString();
+                    var ipConexion = "http://" + ipv4 + ":" + LocalPort + "/";
 
                     MemoryStream stream1 = new MemoryStream(Convert.FromBase64String(inmueble.Imagen));
                     IFormFile inmuebleFoto = new FormFile(stream1, 0, stream1.Length, "inmueble", ".jpg");
@@ -70,7 +75,7 @@ namespace InmobiliariaEfler.Api
                     string fileName = "inmueble_" + inmueble.PropietarioId + r.Next(0, 100000) + Path.GetExtension(inmuebleFoto.FileName);
                     string pathCompleto = Path.Combine(path, fileName);
 
-                    inmueble.Imagen = Path.Combine("http://192.168.0.104:5000/", "Uploads/", fileName);
+                    inmueble.Imagen = Path.Combine(ipConexion, "Uploads/", fileName);
                     using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
                     {
                         inmuebleFoto.CopyTo(stream);
