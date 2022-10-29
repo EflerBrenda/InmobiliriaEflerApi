@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "mD2E7bYmHKkko/Lz3Xb6bpRjsBymwP4qwO58HkJqrjU=",
+  "Hash": "OIZs3QfYxvLwF83ryQtYLF1uxejJNGO5XGcnP7PMT5I=",
   "Source": "InmobiliariaApi",
   "BasePath": "_content/InmobiliariaApi",
   "Mode": "Default",
@@ -51,12 +51,12 @@
       "OriginalItemSpec": "wwwroot\\Uploads\\inmueble_1.jpeg"
     },
     {
-      "Identity": "C:\\Users\\Brenda\\Net\\InmobiliariaApi\\wwwroot\\Uploads\\inmueble_143696.jpg",
+      "Identity": "C:\\Users\\Brenda\\Net\\InmobiliariaApi\\wwwroot\\Uploads\\inmueble_2.jpg",
       "SourceId": "InmobiliariaApi",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\Brenda\\Net\\InmobiliariaApi\\wwwroot\\",
       "BasePath": "_content/InmobiliariaApi",
-      "RelativePath": "Uploads/inmueble_143696.jpg",
+      "RelativePath": "Uploads/inmueble_2.jpg",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -65,15 +65,15 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Uploads\\inmueble_143696.jpg"
+      "OriginalItemSpec": "wwwroot\\Uploads\\inmueble_2.jpg"
     },
     {
-      "Identity": "C:\\Users\\Brenda\\Net\\InmobiliariaApi\\wwwroot\\Uploads\\inmueble_161709.jpg",
+      "Identity": "C:\\Users\\Brenda\\Net\\InmobiliariaApi\\wwwroot\\Uploads\\inmueble_3.jpg",
       "SourceId": "InmobiliariaApi",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\Brenda\\Net\\InmobiliariaApi\\wwwroot\\",
       "BasePath": "_content/InmobiliariaApi",
-      "RelativePath": "Uploads/inmueble_161709.jpg",
+      "RelativePath": "Uploads/inmueble_3.jpg",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -82,7 +82,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Uploads\\inmueble_161709.jpg"
+      "OriginalItemSpec": "wwwroot\\Uploads\\inmueble_3.jpg"
     }
   ]
 }
